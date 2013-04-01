@@ -16,3 +16,17 @@ apt::source { 'puppetlabs':
   key_server => 'pgp.mit.edu',
 }
 
+Package { ensure => "installed" }
+
+package { "puppet":
+	ensure => latest
+}
+
+$postinstallpkgs = ["build-essential", "zlib1g-dev", "libssl-dev", "libreadline-gplv2-dev", "ssh", "aptitude"]
+$enhancers = [ "screen", "strace", "sudo" ]
+
+package { $enhancers: }
+package { $postinstallpkgs: }
+
+
+

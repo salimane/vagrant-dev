@@ -143,9 +143,77 @@
       shell      => '/bin/zsh',
       groups     => ['sudo'],
       sshkeytype => 'ssh-rsa',
-      sshkey     => 'AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ=='
+      sshkey     => 'AAAAB3NzaC1yc2EAAAADAQABAAABAQDT2yEfwTAsvOqWCzCas/JmIjuVvMtVN+1g/ZRpdxNvyTep9kYLodcKOMg77RpiqDGdhJVH3XpXbfWE8zGihc1CN1KymhO5L3WhlaAsViDYqirrMPtlOwO897sCmF8TfL7aPWGU4RBQKUv9DfdBzHUaDBOufZZS6bgtMCzqoiWM5n0kjOpZ9imX+53kZJ288wGrF/GahFe17y+q5n0D8If6kZ2mMUjBVW6oCYlLWE0HEZaZt+1R4no1P3keiZ2hn9DIhKytJivrI9aQdAymzpAtRiykzErTGhO6ZK0n9ukXMb9sqWL+4pbCvERs6BRetmVvIb6zT4mpy0xhjhpy8uzH'
   }
 
+
+# Definition: dotfilesSetup
+  #
+  # Description
+  #
+  # Parameters:
+  #
+  # Actions:
+  #
+  # Requires:
+  #  This definition has no requirements.
+  #
+  # Sample Usage:
+  #  dotfilesSetup
+define  dotfilesSetup() {
+
+  $username = 'salimane'
+  $home_dir = "/home/${username}"
+  if(!defined(Package['git'])) {
+    package { 'git': ensure => present,}
+  }
+  if(!defined(Package['zsh'])) {
+    package { 'zsh': ensure => present,}
+  }
+  if(!defined(Package['curl'])) {
+    package { 'curl': ensure => present,}
+  }
+
+  exec { "chsh -s /bin/zsh ${username}":
+    unless  => "grep -E '^${username}.+:/bin/zsh$' /etc/passwd",
+    require => [ Package['zsh'], USER[$username]]
+  }
+
+  file { "/home/${username}/htdocs":
+    ensure => 'directory',
+    owner  => 'salimane',
+  }
+
+  file { "${home_dir}/bin":
+    ensure => 'directory',
+    owner  => 'salimane',
+  }
+
+  exec { 'clone_dotfiles':
+    cwd     =>"${home_dir}/htdocs",
+    user    => $username,
+    command => "git clone https://github.com/salimane/dotfiles.git ${home_dir}/htdocs/dotfiles",
+    creates => "${home_dir}/htdocs/dotfiles",
+    require => [Package['git'], Package['zsh'], Package['curl'], USER[$username], File["${home_dir}/htdocs"]]
+  }
+
+  exec { 'copy-dotfiles':
+    cwd     => "${home_dir}/htdocs/dotfiles",
+    user    => $username,
+    command => "cp zsh/.zshrc  wget/.wgetrc  nano/.nanorc valgrind/.valgrindrc  git/.gitconfig git/.gitignore git/.gitattributes ${home_dir}/ && cp bin/* ${home_dir}/bin/ && chmod +x ${home_dir}/bin/*",
+    unless  => 'ls .zshrc',
+    require => Exec['clone_dotfiles'],
+  }
+
+}
+
+dotfilesSetup{'salimane':}
+
+class { 'ntp':
+  ensure     => running,
+  servers    => [ 'time.apple.com iburst', 'pool.ntp.org iburst' ],
+  autoupdate => true,
+}
 
 
 

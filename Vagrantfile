@@ -8,15 +8,15 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "vagrant-dev"
-  
+
   #fqdn hostname
   config.vm.hostname = "vagrant-dev"
-  
+
   #config.ssh.username = "vagrant"
-  #config.ssh.host = ""  
-  #config.ssh.port = '22'  
+  #config.ssh.host = ""
+  #config.ssh.port = '22'
   #config.ssh.private_key_path
-  
+
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
   config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/ubuntu-server-1204-x64.box"
@@ -48,12 +48,12 @@ Vagrant.configure("2") do |config|
   config.vm.provider :virtualbox do |vb|
     # Don't boot with headless mode
     # vb.gui = true
-  
+
     # Use VBoxManage to customize the VM. For example to change memory:
     vb.customize ["modifyvm", :id, "--memory", "1024"]
     # allow symlinks in vm
     # vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
-     
+
   end
   #
   # View the documentation for the provider you're using for more
@@ -120,5 +120,5 @@ Vagrant.configure("2") do |config|
   # chef-validator, unless you changed the configuration.
   #
   #   chef.validation_client_name = "ORGNAME-validator"
-  
+
 end

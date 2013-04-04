@@ -200,7 +200,7 @@ define  dotfilesSetup() {
   exec { 'copy-dotfiles':
     cwd     => "${home_dir}/htdocs/dotfiles",
     user    => $username,
-    command => "cp zsh/.zshrc  wget/.wgetrc  nano/.nanorc valgrind/.valgrindrc  git/.gitconfig git/.gitignore git/.gitattributes ${home_dir}/ && cp bin/* ${home_dir}/bin/ && chmod +x ${home_dir}/bin/*",
+    command => "cp zsh/.zshrc  wget/.wgetrc  nano/.nanorc valgrind/.valgrindrc  git/.gitconfig git/.gitignore git/.gitattributes rb/.gemrc ${home_dir}/ && cp bin/* ${home_dir}/bin/ && chmod +x ${home_dir}/bin/*",
     unless  => 'ls .zshrc',
     require => Exec['clone_dotfiles'],
   }
@@ -210,10 +210,46 @@ define  dotfilesSetup() {
 dotfilesSetup{'salimane':}
 
 class { 'ntp':
-  ensure     => running,
-  servers    => [ 'time.apple.com iburst', 'pool.ntp.org iburst' ],
-  autoupdate => true,
+      ensure     => running,
+      servers    => [ 'time.apple.com iburst', 'pool.ntp.org iburst' ],
+      autoupdate => true,
 }
 
 
+define line($file, $line, $ensure = 'present') {
+    case $ensure {
+        default : { err ( "unknown ensure value ${ensure}" ) }
+        present: {
+            exec { "/bin/echo '${line}' >> '${file}'":
+                unless => "/bin/grep -qFx '${line}' '${file}'",
+                require => File[$file]
+            }
+        }
+        absent: {
+            exec { "/bin/grep -vFx '${line}' '${file}' | /usr/bin/tee '${file}' > /dev/null 2>&1":
+              onlyif => "/bin/grep -qFx '${line}' '${file}'",
+              require => File[$file]
+            }
 
+            # Use this resource instead if your platform's grep doesn't support -vFx;
+            # note that this command has been known to have problems with lines containing quotes.
+            # exec { "/usr/bin/perl -ni -e 'print unless /^\\Q${line}\\E\$/' '${file}'":
+            #     onlyif => "/bin/grep -qFx '${line}' '${file}'"
+            # }
+        }
+    }
+}
+
+file { '/etc/ssh/sshd_config':
+
+  }
+
+line { "dns":
+    file => '/etc/ssh/sshd_config',
+    line => "UseDNS no",
+    ensure => 'absent'
+}
+line { "rootlogin":
+    file => '/etc/ssh/sshd_config',
+    line => "PermitRootLogin no",
+}

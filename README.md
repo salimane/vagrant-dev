@@ -8,6 +8,7 @@ Installation
 
 * run the following commands:
 ```shell
+vagrant plugin install vagrant-vbguest
 vagrant box add vagrant-dev http://puppet-vagrant-boxes.puppetlabs.com/ubuntu-server-1204-x64.box
 git clone https://github.com/salimane/vagrant-dev.git
 cd vagrant-dev

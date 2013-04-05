@@ -1,5 +1,24 @@
 
-  Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
+Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
+Package { ensure => 'installed' }
+
+class { 'apt':
+  always_apt_update    => true,
+  disable_keys         => undef,
+  proxy_host           => false,
+  proxy_port           => '8080',
+  purge_sources_list   => false,
+  purge_sources_list_d => false,
+  purge_preferences_d  => false
+}
+
+apt::source { 'puppetlabs':
+  location   => 'http://apt.puppetlabs.com',
+  repos      => 'main',
+  key        => '4BD6EC30',
+  key_server => 'pgp.mit.edu',
+}
+
 
   #
   # Class: systemUpdate
@@ -33,7 +52,7 @@
   include systemUpdate
 
 
-  Package { ensure => 'installed' }
+
 
   # puppet
   package { 'puppet':
@@ -107,19 +126,17 @@
       owner   => $username,
       group   => $username,
       mode    => '0750',
-      require => [ USER[$username], GROUP[$username] ]
-  }
+      require => [ USER[$username], GROUP[$username] ];
 
-  file { "/home/${username}/.ssh":
+
+ "/home/${username}/.ssh":
       ensure  => directory,
       owner   => $username,
       group   => $username,
       mode    => '0700',
-      require => FILE["/home/${username}/"]
-  }
+      require => FILE["/home/${username}/"];
 
-  # now make sure that the ssh key authorized files is around
-  file { "/home/${username}/.ssh/authorized_keys":
+ "/home/${username}/.ssh/authorized_keys":
       ensure  => present,
       owner   => $username,
       group   => $username,
@@ -197,11 +214,48 @@ define  dotfilesSetup() {
     require => [Package['git'], Package['zsh'], Package['curl'], USER[$username], File["${home_dir}/htdocs"]]
   }
 
-  exec { 'copy-dotfiles':
+  file {
+    "${home_dir}/.zshrc":
+        ensure => link,
+        target => "${home_dir}/htdocs/dotfiles/zsh/.zshrc",
+        require => Exec['clone_dotfiles'];
+
+    "${home_dir}/.wgetrc":
+        ensure => link,
+        target => "${home_dir}/htdocs/dotfiles/wget/.wgetrc",
+        require => Exec['clone_dotfiles'];
+
+    "${home_dir}/.nanorc":
+    ensure => link,
+    target => "${home_dir}/htdocs/dotfiles/nano/.nanorc",
+    require => Exec['clone_dotfiles'];
+
+    "${home_dir}/.gitconfig":
+    ensure => link,
+    target => "${home_dir}/htdocs/dotfiles/git/.gitconfig",
+    require => Exec['clone_dotfiles'];
+
+    "${home_dir}/.gitattributes":
+    ensure => link,
+    target => "${home_dir}/htdocs/dotfiles/git/.gitattributes",
+    require => Exec['clone_dotfiles'];
+
+    "${home_dir}/.gemrc":
+    ensure => link,
+    target => "${home_dir}/htdocs/dotfiles/rb/.gemrc",
+    require => Exec['clone_dotfiles'];
+
+    "${home_dir}/.valgrindrc":
+    ensure => link,
+    target => "${home_dir}/htdocs/dotfiles/valgrind/.valgrindrc",
+    require => Exec['clone_dotfiles'];
+  }
+
+
+  exec { 'copy-binfiles':
     cwd     => "${home_dir}/htdocs/dotfiles",
     user    => $username,
-    command => "cp zsh/.zshrc  wget/.wgetrc  nano/.nanorc valgrind/.valgrindrc  git/.gitconfig git/.gitignore git/.gitattributes rb/.gemrc ${home_dir}/ && cp bin/* ${home_dir}/bin/ && chmod +x ${home_dir}/bin/*",
-    unless  => 'ls .zshrc',
+    command => "cp bin/* ${home_dir}/bin/ && chmod +x ${home_dir}/bin/*",
     require => Exec['clone_dotfiles'],
   }
 
@@ -244,12 +298,64 @@ file { '/etc/ssh/sshd_config':
 
   }
 
-line { "dns":
+line { 'dns':
+    ensure => 'absent',
     file => '/etc/ssh/sshd_config',
-    line => "UseDNS no",
-    ensure => 'absent'
-}
-line { "rootlogin":
+    line => 'UseDNS no';
+
+    'rootlogin':
     file => '/etc/ssh/sshd_config',
-    line => "PermitRootLogin no",
+    line => 'PermitRootLogin no';
 }
+
+apt::ppa { 'ppa:nginx/development': }
+
+class { 'nginx':
+      require => Apt::Ppa['ppa:nginx/development']
+}
+
+
+class mysqlSetup {
+
+  apt::source { 'percona':
+    location    => 'http://repo.percona.com/apt',
+    release     => $lsbdistcodename,
+    repos       => 'main',
+    include_src => true,
+    key         => 'CD2EFD2A',
+    key_server  => 'keys.gnupg.net',
+  }
+
+  apt::pin { 'Percona Development Team': priority => 1001 }
+
+  package { 'percona-server-server-5.5':
+    ensure  => installed,
+    require => [ Apt::Source['percona']];
+
+    'percona-server-client-5.5':
+    ensure  => installed,
+    require => [ Apt::Source['percona']];
+
+
+    'libmysqlclient-dev':
+    ensure  => installed,
+    require => [ Apt::Source['percona']];
+  }
+
+  service { 'mysql':
+    ensure => 'running',
+    enable => true,
+    hasstatus => true,
+    hasrestart => true,
+    require => Package['percona-server-server-5.5'],
+  }
+
+}
+
+include mysqlSetup
+
+
+include java7
+
+include nodejs
+

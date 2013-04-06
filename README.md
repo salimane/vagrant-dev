@@ -4,8 +4,8 @@ Set up my vagrant development box
 Installation
 ------------
 
+* Install virtualbox using the packages at [Download VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 * Install vagrant using the installation instructions in the [Getting Started document](http://vagrantup.com/v1/docs/getting-started/index.html)
-
 * run the following commands:
 ```shell
 vagrant plugin install vagrant-vbguest

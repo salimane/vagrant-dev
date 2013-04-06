@@ -41,7 +41,7 @@ apt::source { 'puppetlabs':
       #require => Exec['apt-get update'],
       #}
 
-      $sysPackages = [ 'build-essential', 'zlib1g-dev', 'libssl-dev', 'libreadline-gplv2-dev', 'ssh', 'aptitude', 'zsh', 'git' ]
+      $sysPackages = [ 'build-essential', 'zlib1g-dev', 'libssl-dev', 'libreadline-gplv2-dev', 'ssh', 'aptitude', 'zsh', 'git' , 'software-properties-common', 'language-pack-zh-hans-base']
       package { $sysPackages:
           ensure => 'installed',
           #require => Exec['apt-get upgrade'],
@@ -350,12 +350,84 @@ class mysqlSetup {
     require => Package['percona-server-server-5.5'],
   }
 
+    # Equivalent to /usr/bin/mysql_secure_installation without providing or setting a password
+    exec { 'mysql_secure_installation':
+        command => '/usr/bin/mysql -uroot -e "DELETE FROM mysql.user WHERE User=\'\'; DELETE FROM mysql.user WHERE User=\'root\' AND Host NOT IN (\'localhost\', \'127.0.0.1\', \'::1\'); DROP DATABASE IF EXISTS test; FLUSH PRIVILEGES;" mysql',
+        require => Service['mysql'],
+    }
+
 }
 
 include mysqlSetup
 
+include postgresql::server
+
+
 
 include java7
 
-include nodejs
+class { 'nodejs':
+      dev_package => true
+}
 
+package { 'less':
+  #ensure   => latest,
+  provider => 'npm';
+}
+
+class phpSetup {
+include php::fpm
+php::fpm::pool {  'www':
+      listen => '/tmp/php-fpm.sock',
+      listen_type => 'unix',
+}
+
+php::module { [ 'curl', 'gd', 'geoip','imagick','imap','intl','mcrypt','memcache','memcached','mysql','pgsql','pspell','snmp','sqlite','xdebug','xmlrpc','xsl',]:
+        notify => Class['php::fpm::service'],
+}
+
+php::module { [ 'apc', ]:
+        notify => Class['php::fpm::service'],
+        package_prefix => 'php-',
+}
+
+file { '/etc/php5/conf.d/php.custom.ini':
+        ensure => file,
+        notify => Class['php::fpm::service'],
+}
+
+line {
+  'php-ini-display-errors':
+    file => '/etc/php5/conf.d/php.custom.ini',
+    line => ['display_errors = On'],
+    notify => Class['php::fpm::service'];
+
+ 'php-ini-memory-limit':
+    file => '/etc/php5/conf.d/php.custom.ini',
+    line => ['memory_limit = 256M'],
+    notify => Class['php::fpm::service'];
+
+ 'php-ini-datetime':
+    file => '/etc/php5/conf.d/php.custom.ini',
+    line => ['date.timezone = Asia/Shanghai'],
+    notify => Class['php::fpm::service'],
+}
+
+exec { 'composer':
+  command => 'curl -s https://getcomposer.org/installer | php && mv composer.phar /home/salimane/bin/composer && chmod +x /home/salimane/bin/composer ',
+  unless => 'test -e /home/salimane/bin/composer',
+  require => Class['php::fpm'],
+  cwd => '/home/salimane',
+  user   => 'salimane',
+  group   => 'salimane',
+  timeout => 0
+}
+exec { '/home/salimane/bin/composer self-update':
+  require => Exec['composer'],
+  user   => 'salimane',
+  group   => 'salimane',
+  timeout => 0
+}
+}
+
+include phpSetup

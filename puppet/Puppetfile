@@ -1,0 +1,32 @@
+
+mod 'concat',
+    :git => "git://github.com/ripienaar/puppet-concat.git"
+
+mod 'stdlib',
+    :git => "git://github.com/puppetlabs/puppetlabs-stdlib.git"
+
+mod 'apt',
+    :git => "git://github.com/puppetlabs/puppetlabs-apt.git"
+
+mod 'nginx',
+    :git => "git://github.com/puppetlabs/puppetlabs-nginx.git"
+
+mod 'ntp',
+    :git => "git://github.com/puppetlabs/puppetlabs-ntp.git"
+
+mod 'nodejs',
+    :git => "git://github.com/puppetlabs/puppetlabs-nodejs.git"
+
+mod 'php',
+    :git => "git://github.com/saz/puppet-php.git"
+
+mod 'java7',
+    :git => "git://github.com/softek/puppet-java7.git"
+
+mod 'sqlite3',
+    :git => "git://github.com/puppetlabs/puppetlabs-sqlite3.git"
+
+mod 'postgresql',
+    :git => 'git://github.com/akumria/puppet-postgresql.git'
+
+

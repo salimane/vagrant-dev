@@ -52,7 +52,7 @@ Vagrant.configure("2") do |config|
     # Use VBoxManage to customize the VM. For example to change memory:
     vb.customize ["modifyvm", :id, "--memory", "1024"]
     # allow symlinks in vm
-    # vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
+    vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
 
   end
   #
@@ -78,9 +78,10 @@ Vagrant.configure("2") do |config|
   # # }
   #
   config.vm.provision :puppet do |puppet|
-    puppet.options = "--verbose --debug --hiera_config /vagrant/hiera.yaml"
+    puppet.options = "--verbose --summarize --hiera_config /vagrant/hiera.yaml"
     puppet.manifests_path = "puppet/manifests"
     puppet.module_path = "puppet/modules"
+    #puppet.manifest_file  = "default.pp"
   end
 
   # Enable provisioning with chef solo, specifying a cookbooks path, roles

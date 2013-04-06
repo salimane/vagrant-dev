@@ -8,11 +8,12 @@ Installation
 * Install vagrant using the installation instructions in the [Getting Started document](http://vagrantup.com/v1/docs/getting-started/index.html)
 * run the following commands:
 ```shell
+sudo gem install librarian-puppet
 vagrant plugin install vagrant-vbguest
 vagrant box add vagrant-dev http://puppet-vagrant-boxes.puppetlabs.com/ubuntu-server-1204-x64.box
 git clone https://github.com/salimane/vagrant-dev.git
-cd vagrant-dev
-git submodule update --init
+cd vagrant-dev/puppet
+librarian-puppet init
 vagrant up
 vagrant ssh
 ```

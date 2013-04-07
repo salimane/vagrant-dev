@@ -4,17 +4,18 @@ Set up my vagrant development box
 Installation
 ------------
 
+* install git, ruby
 * Install virtualbox using the packages at [Download VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 * Install vagrant using the installation instructions in the [Getting Started document](http://vagrantup.com/v1/docs/getting-started/index.html)
 * run the following commands:
 
 ```shell
-sudo gem install librarian-puppet
+gem install puppet librarian-puppet
 vagrant plugin install vagrant-vbguest
 vagrant box add vagrant-dev http://puppet-vagrant-boxes.puppetlabs.com/ubuntu-server-1204-x64.box
 git clone https://github.com/salimane/vagrant-dev.git
 cd vagrant-dev/puppet
-librarian-puppet init
+librarian-puppet install --clean
 vagrant up
 vagrant ssh
 ```

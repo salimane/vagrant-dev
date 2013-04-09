@@ -30,4 +30,7 @@ mod 'concat',
 mod 'postgresql',
     :git => 'git://github.com/akumria/puppet-postgresql.git'
 
+mod 'monit',
+    :git => 'git://github.com/deck/puppet-monit.git'
+
 

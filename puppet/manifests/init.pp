@@ -1,19 +1,18 @@
-    Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
-    File {
-        owner => 0,
-        group => 0,
-        mode => 0644
-    }
-    Package{ensure => installed}
+Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
+File {
+    owner => 0,
+    group => 0,
+    mode => 0644
+}
+Package{ensure => installed}
 
-    stage { 'first': }
-    stage { 'last': }
-    #Stage['first'] -> Stage['init'] -> Stage['last']
-    Stage['first'] -> Stage['last']
+stage { 'first': }
+stage { 'last': }
+Stage['first'] -> Stage['main'] -> Stage['last']
 
-    import 'basic.pp'
-    import 'nodes.pp'
+import 'sysupdate.pp'
+import 'nodes.pp'
 
-    class{'basic':
-      stage => first
-    }
+class{'sysupdate':
+  stage => first
+}

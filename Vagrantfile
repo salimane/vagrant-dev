@@ -78,7 +78,7 @@ Vagrant.configure("2") do |config|
   # # }
   #
   config.vm.provision :puppet do |puppet|
-    puppet.options = "--verbose --summarize --hiera_config /vagrant/hiera.yaml"
+    puppet.options = "--verbose --summarize --debug --hiera_config /vagrant/hiera.yaml"
     puppet.manifests_path = "puppet/manifests"
     puppet.module_path = "puppet/modules"
     puppet.manifest_file  = "init.pp"

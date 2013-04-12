@@ -24,6 +24,15 @@ vagrant ssh
 Installed components
 --------------------
 
+* zsh
+* nginx
+* rbenv
+* rails
+* node.js
+* npm
+* percona mysql server
+* postgresql
+* php-fpm
 
 Hints
 -----

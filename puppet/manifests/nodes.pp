@@ -10,6 +10,7 @@ node default {
     import 'postgresql.pp'
     import 'nodejs.pp'
     import 'railssetup.pp'
+    import 'redissetup.pp'
 
 
 
@@ -54,4 +55,5 @@ node default {
     include mysqlsetup
     include phpsetup
     include railssetup
+    include redissetup
 }

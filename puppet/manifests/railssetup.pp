@@ -52,4 +52,10 @@ class railssetup {
         ensure  => latest,
         require => Rbenv::Compile["${rubyversion}"],
     }
+
+    file_line { 'permituserenv':
+        path    => '/etc/ssh/sshd_config',
+        line    => 'PermitUserEnvironment yes',
+        require => File['/etc/ssh/sshd_config']
+    }
 }

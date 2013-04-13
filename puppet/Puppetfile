@@ -33,4 +33,7 @@ mod 'postgresql',
 mod 'monit',
     :git => 'git://github.com/deck/puppet-monit.git'
 
+mod 'rbenv',
+    :git => 'git://github.com/alup/puppet-rbenv.git'
+
 

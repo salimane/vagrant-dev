@@ -11,6 +11,7 @@ node default {
     import 'nodejs.pp'
     import 'railssetup.pp'
     import 'redissetup.pp'
+    import 'sysctlsetup.pp'
 
 
 
@@ -56,4 +57,5 @@ node default {
     include phpsetup
     include railssetup
     include redissetup
+    include sysctlsetup
 }

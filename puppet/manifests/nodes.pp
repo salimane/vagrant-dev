@@ -12,6 +12,8 @@ node default {
     import 'railssetup.pp'
     import 'redissetup.pp'
     import 'sysctlsetup.pp'
+    import 'gosetup.pp'
+    import 'heroku.pp'
 
 
 
@@ -58,4 +60,8 @@ node default {
     include railssetup
     include redissetup
     include sysctlsetup
+    include gosetup
+    include heroku
+    include monit
+    include phpqatools
 }

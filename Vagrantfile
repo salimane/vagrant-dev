@@ -16,6 +16,7 @@ Vagrant.configure("2") do |config|
   #config.ssh.host = ""
   #config.ssh.port = '22'
   #config.ssh.private_key_path
+  config.ssh.forward_agent = true
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.

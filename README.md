@@ -26,12 +26,16 @@ Installed components
 
 * zsh
 * nginx
+* golang
+* heroku toolbelt
+* sysctl configurations for lot of connections
 * rbenv
 * rails
 * node.js
 * npm
 * percona mysql server
 * postgresql
+* redis
 * php-fpm
 
 Hints

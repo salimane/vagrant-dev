@@ -36,7 +36,8 @@ Installed components
 * percona mysql server
 * postgresql
 * redis
-* php-fpm
+* php-fpm env + xdebug + xhprof + phpunit
+
 
 Hints
 -----

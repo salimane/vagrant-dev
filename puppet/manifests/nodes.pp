@@ -63,5 +63,4 @@ node default {
     include gosetup
     include heroku
     include monit
-    include phpqatools
 }

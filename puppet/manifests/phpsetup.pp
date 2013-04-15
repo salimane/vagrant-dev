@@ -19,6 +19,12 @@ class phpsetup {
         notify => Class['php::fpm::service'],
     }
 
+    if defined(Package['php-pear']) != true{
+        package { 'php-pear':
+            ensure => present,
+        }
+    }
+
     file_line {
         'php-ini-display-errors':
             path   => '/etc/php5/conf.d/php.custom.ini',
@@ -64,5 +70,18 @@ class phpsetup {
             user    => 'salimane',
             group   => 'salimane',
             timeout => 0;
+
+        'pear-upgrade':
+            command => 'pear upgrade PEAR && pear config-set auto_discover 1',
+            require => [Package['build-essential'], Package['php-pear']];
+
+        'phpunit-install':
+            command => 'pear install pear.phpunit.de/PHPUnit',
+            unless => '[ -f /usr/bin/phpunit ]',
+            require => [Exec['pear-upgrade']],
     }
+
+    import 'xhprof.pp'
+    include xhprof
+    #include phpqatools
 }

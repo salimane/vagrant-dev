@@ -35,46 +35,28 @@ class xhprof {
         'install_xhprof':
             cwd     =>"${home_dir}/htdocs/xhprof/extension",
             command => "phpize && ./configure && make && make install && echo \"extension=xhprof.so\nxhprof.output_dir=/tmp/\" > /etc/php5/conf.d/xhprof.ini",
-            require => Exec['install_xhprof'],
+            require => Exec['clone_xhprof'],
             creates => "/etc/php5/conf.d/xhprof.ini";
     }
 
     file_line {
         'php-ini-prepend':
             path   => '/etc/php5/conf.d/php.custom.ini',
-            line   => 'auto_prepend_file = ${home_dir}/htdocs/xhprof/xhprof_html/header.php',
+            line   => "auto_prepend_file = ${home_dir}/htdocs/xhprof/xhprof_html/header.php",
             require => [Exec['install_xhprof'], File['/etc/php5/conf.d/php.custom.ini']],
             notify => Class['php::fpm::service'];
 
         'php-ini-append':
             path   => '/etc/php5/conf.d/php.custom.ini',
-            line   => 'auto_append_file = ${home_dir}/htdocs/xhprof/xhprof_html/footer.php',
+            line   => "auto_append_file = ${home_dir}/htdocs/xhprof/xhprof_html/footer.php",
             require => [Exec['install_xhprof'], File['/etc/php5/conf.d/php.custom.ini']],
             notify => Class['php::fpm::service'];
-    }
-
-    nginx::resource::upstream { 'php_backend':
-       ensure  => present,
-       members => [
-         'unix:/tmp/php-fpm.sock',
-       ],
-    }
-
-     nginx::resource::vhost { 'xhprof.local':
-        ensure              => present,
-        listen_port         => '80',
-        www_root            => '${home_dir}/htdocs/xhprof/xhprof_html',
-        index_files         => ['index.php'],
-        server_name         => ['xhprof.local'],
-        location_cfg_prepend =>{'if (!-e $request_filename) { rewrite ^(^\/*)/(.*)$ $1/index.php last; }' => ''},
-        location_cfg_append =>{'access_log' => '/var/log/nginx/xhprof.access.log', 'error_log' => '/var/log/nginx/xhprof.error.log'},
-        require             => Exec['install_xhprof'],
     }
 
     nginx::resource::location { 'xhprof.local-images':
         ensure              => present,
         location            => '~* ^.+\.(jpg|jpeg|gif|css|png|js|ico)$',
-        www_root            => '${home_dir}/htdocs/xhprof/xhprof_html',
+        www_root            => "${home_dir}/htdocs/xhprof/xhprof_html",
         vhost               => 'xhprof.local',
         location_cfg_append =>{'access_log' => 'off', 'expires' => '1m'}
     }
@@ -82,9 +64,35 @@ class xhprof {
     nginx::resource::location { 'xhprof.local-php':
         ensure              => present,
         location            => '~ ^(.+\.php)(.*)$',
-        www_root            => '${home_dir}/htdocs/xhprof/xhprof_html',
+        www_root            => "${home_dir}/htdocs/xhprof/xhprof_html",
         vhost               => 'xhprof.local',
         index_files         => ['index.php'],
-        location_cfg_append =>{'fastcgi_pass' => 'off', 'include' => 'fastcgi_params'}
+        location_cfg_append =>{'fastcgi_pass' => 'php_backend', 'include' => 'fastcgi_params'}
     }
+
+    nginx::resource::vhost { 'xhprof.local':
+        ensure              => present,
+        listen_port         => '80',
+        www_root            => "${home_dir}/htdocs/xhprof/xhprof_html",
+        index_files         => ['index.php'],
+        server_name         => ['xhprof.local'],
+        location_cfg_prepend =>{'if (!-e $request_filename) { rewrite ^(^\/*)/(.*)$ $1/index.php last; }' => ''},
+        location_cfg_append =>{'access_log' => '/var/log/nginx/xhprof.access.log', 'error_log' => '/var/log/nginx/xhprof.error.log'},
+        require             => Exec['install_xhprof'],
+    }
+
+    file { "/etc/hosts":
+        ensure => present,
+        owner => "root",
+        group => "root",
+        mode => "0644",
+    }
+
+    host { "xhprof.local":
+        alias => [ "xhprof.local" ],
+        ensure => present,
+        ip => '127.0.0.1',
+        target => '/etc/hosts',
+        require => File["/etc/hosts"],
+  }
 }

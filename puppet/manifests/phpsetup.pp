@@ -81,6 +81,13 @@ class phpsetup {
             require => [Exec['pear-upgrade']],
     }
 
+    nginx::resource::upstream { 'php_backend':
+       ensure  => present,
+       members => [
+         'unix:/tmp/php-fpm.sock',
+       ],
+    }
+
     import 'xhprof.pp'
     include xhprof
     #include phpqatools

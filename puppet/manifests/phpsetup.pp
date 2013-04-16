@@ -42,7 +42,33 @@ class phpsetup {
             path   => '/etc/php5/conf.d/php.custom.ini',
             line   => 'date.timezone = Asia/Shanghai',
             require => File['/etc/php5/conf.d/php.custom.ini'],
+            notify => Class['php::fpm::service'];
+
+        'php-ini-disable-func':
+            path   => '/etc/php5/conf.d/php.custom.ini',
+            line   => 'disable_functions = ',
+            require => File['/etc/php5/conf.d/php.custom.ini'],
+            notify => Class['php::fpm::service'];
+
+        'php-ini-error-reporting':
+            path   => '/etc/php5/conf.d/php.custom.ini',
+            line   => 'error_reporting = E_ALL | E_STRICT',
+            require => File['/etc/php5/conf.d/php.custom.ini'],
+            notify => Class['php::fpm::service'];
+
+         'php-ini-startup-error':
+            path   => '/etc/php5/conf.d/php.custom.ini',
+            line   => 'display_startup_errors = On',
+            require => File['/etc/php5/conf.d/php.custom.ini'],
+            notify => Class['php::fpm::service'];
+
+        'php-ini-error_log':
+            path   => '/etc/php5/conf.d/php.custom.ini',
+            line   => 'error_log = /var/log/php_errors.log',
+            require => File['/etc/php5/conf.d/php.custom.ini'],
             notify => Class['php::fpm::service'],
+
+
     }
 
     exec {

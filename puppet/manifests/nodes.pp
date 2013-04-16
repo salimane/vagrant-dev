@@ -14,6 +14,9 @@ node default {
     import 'sysctlsetup.pp'
     import 'gosetup.pp'
     import 'heroku.pp'
+    import 'weighttp'
+    import 'security'
+    import 'memcachedsetup'
 
 
 
@@ -63,4 +66,7 @@ node default {
     include gosetup
     include heroku
     include monit
+    include weighttp
+    include security
+    include memcachedsetup
 }

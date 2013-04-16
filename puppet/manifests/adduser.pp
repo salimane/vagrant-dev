@@ -46,7 +46,7 @@ define adduser ($uid, $shell, $groups, $sshkeytype, $sshkey) {
             ensure  => directory,
             owner   => $username,
             group   => $username,
-            mode    => '0750',
+            mode    => '0755',
             require => [ USER[$username], GROUP[$username] ];
 
 

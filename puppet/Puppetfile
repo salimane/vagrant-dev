@@ -36,7 +36,7 @@ mod 'monit',
 mod 'rbenv',
     :git => 'git://github.com/alup/puppet-rbenv.git'
 
-mod 'phpqatools',
-    :git => 'git://github.com/rafaelfelix/puppet-phpqatools.git'
+mod 'memcached',
+    :git => 'git://github.com/saz/puppet-memcached.git'
 
 

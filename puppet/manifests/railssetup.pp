@@ -7,41 +7,50 @@ class railssetup {
 
     rbenv::install { $username:
         group => $username,
+        user    => $username,
         home  => "${home_dir}",
     }
 
     rbenv::plugin {
         'rbenv-gem-rehash':
-            user   => $username,
+            group => $username,
+            user    => $username,
             source => "git://github.com/sstephenson/rbenv-gem-rehash.git";
 
         'rbenv-vars':
-            user   => $username,
+            group => $username,
+            user    => $username,
             source => "git://github.com/sstephenson/rbenv-vars.git";
 
         'rbenv-each':
-            user   => $username,
+            group => $username,
+            user    => $username,
             source => "git://github.com/chriseppstein/rbenv-each.git";
 
         'rbenv-update':
-            user   => $username,
+            group => $username,
+            user    => $username,
             source => "git://github.com/rkh/rbenv-update.git";
 
         'rbenv-whatis':
-            user   => $username,
+            group => $username,
+            user    => $username,
             source => "git://github.com/rkh/rbenv-whatis.git";
 
         'rbenv-use':
-            user   => $username,
+            group => $username,
+            user    => $username,
             source => "git://github.com/rkh/rbenv-use.git";
 
         'rbenv-default-gems':
-            user   => $username,
+            group => $username,
+            user    => $username,
             source => "git://github.com/sstephenson/rbenv-default-gems.git";
     }
 
     rbenv::compile { $rubyversion:
-        user   => $username,
+        group => $username,
+        user    => $username,
         home   => "${home_dir}",
         global => true
     }

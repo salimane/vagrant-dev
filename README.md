@@ -27,7 +27,6 @@ Installed components
 * zsh
 * nginx
 * golang
-* heroku toolbelt
 * sysctl configurations for lot of connections
 * rbenv
 * rails
@@ -36,7 +35,10 @@ Installed components
 * percona mysql server
 * postgresql
 * redis
+* memcached
 * php-fpm env + xdebug + xhprof + phpunit
+* heroku toolbelt
+* weighttp
 
 
 Hints

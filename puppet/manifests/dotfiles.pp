@@ -23,6 +23,7 @@ class  dotfiles {
 
         'clone_dotfiles':
             cwd     =>"${home_dir}/htdocs",
+            group => $username,
             user    => $username,
             command => "git clone https://github.com/salimane/dotfiles.git ${home_dir}/htdocs/dotfiles",
             creates => "${home_dir}/htdocs/dotfiles",
@@ -32,44 +33,60 @@ class  dotfiles {
     file {
         "/home/${username}/htdocs":
             ensure => 'directory',
-            owner  => 'salimane';
+            group => $username,
+            owner  => $username;
 
         "${home_dir}/bin":
             ensure => 'directory',
-            owner  => 'salimane';
+            group => $username,
+            owner  => $username;
 
         "${home_dir}/.zshrc":
             ensure  => link,
+            group => $username,
+            owner  => $username,
             target  => "${home_dir}/htdocs/dotfiles/zsh/.zshrc",
             require => Exec['clone_dotfiles'];
 
         "${home_dir}/.wgetrc":
             ensure  => link,
+            group => $username,
+            owner  => $username,
             target  => "${home_dir}/htdocs/dotfiles/wget/.wgetrc",
             require => Exec['clone_dotfiles'];
 
         "${home_dir}/.nanorc":
             ensure  => link,
+            group => $username,
+            owner  => $username,
             target  => "${home_dir}/htdocs/dotfiles/nano/.nanorc",
             require => Exec['clone_dotfiles'];
 
         "${home_dir}/.gitconfig":
             ensure  => link,
+            group => $username,
+            owner  => $username,
             target  => "${home_dir}/htdocs/dotfiles/git/.gitconfig",
             require => Exec['clone_dotfiles'];
 
         "${home_dir}/.gitattributes":
             ensure  => link,
+            group => $username,
+            owner  => $username,
             target  => "${home_dir}/htdocs/dotfiles/git/.gitattributes",
             require => Exec['clone_dotfiles'];
 
         "${home_dir}/.gemrc":
             ensure  => link,
+            group => $username,
+            owner  => $username,
             target  => "${home_dir}/htdocs/dotfiles/rb/.gemrc",
             require => Exec['clone_dotfiles'];
 
         "${home_dir}/.valgrindrc":
             ensure  => link,
+            group => $username,
+            owner  => $username,
             target  => "${home_dir}/htdocs/dotfiles/valgrind/.valgrindrc",
             require => Exec['clone_dotfiles'];
     }
@@ -77,6 +94,7 @@ class  dotfiles {
 
     exec { 'copy-binfiles':
         cwd     => "${home_dir}/htdocs/dotfiles",
+        group => $username,
         user    => $username,
         command => "cp bin/* ${home_dir}/bin/ && chmod +x ${home_dir}/bin/*",
         require => Exec['clone_dotfiles'],

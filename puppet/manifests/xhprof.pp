@@ -5,8 +5,6 @@
 #
 # === Parameters
 #
-# [*version*]
-#   The version of the package to install. Defaults to '0.9.2'.
 #
 # === Examples
 #
@@ -14,7 +12,6 @@
 #
 # === Requirements
 #
-# This class requires the apache class from PuppetLabs.
 class xhprof {
     package { ['graphviz']:
         ensure => present,
@@ -27,6 +24,7 @@ class xhprof {
     exec {
         'clone_xhprof':
             cwd     =>"${home_dir}/htdocs",
+            group => $username,
             user    => $username,
             command => "git clone https://github.com/salimane/xhprof.git ${home_dir}/htdocs/xhprof && chmod -R 0777 /home/salimane/htdocs/xhprof",
             require => [Package['git'], File["${home_dir}/htdocs"]],
@@ -67,7 +65,7 @@ class xhprof {
         www_root            => "${home_dir}/htdocs/xhprof/xhprof_html",
         vhost               => 'xhprof.local',
         index_files         => ['index.php'],
-        location_cfg_append =>{'fastcgi_pass' => 'php_backend', 'include' => 'fastcgi_params'}
+        location_cfg_append =>{'fastcgi_pass' => 'php_backend', 'fastcgi_index' => 'index.php', 'include' => 'fastcgi_params'}
     }
 
     nginx::resource::vhost { 'xhprof.local':
@@ -76,7 +74,7 @@ class xhprof {
         www_root            => "${home_dir}/htdocs/xhprof/xhprof_html",
         index_files         => ['index.php'],
         server_name         => ['xhprof.local'],
-        location_cfg_prepend =>{'if (!-e $request_filename) { rewrite ^(^\/*)/(.*)$ $1/index.php last; }' => ''},
+        location_cfg_prepend =>{'if (!-e $request_filename) { rewrite ^(^\/*)/(.*)$ $1/index.php last; }' => ' index index.php'},
         location_cfg_append =>{'access_log' => '/var/log/nginx/xhprof.access.log', 'error_log' => '/var/log/nginx/xhprof.error.log'},
         require             => Exec['install_xhprof'],
     }

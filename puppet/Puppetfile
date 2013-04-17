@@ -39,4 +39,7 @@ mod 'rbenv',
 mod 'memcached',
     :git => 'git://github.com/saz/puppet-memcached.git'
 
+mod 'python',
+    :git => 'git://github.com/stankevich/puppet-python.git'
+
 

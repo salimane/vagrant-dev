@@ -17,6 +17,7 @@ node default {
     import 'weighttp'
     import 'security'
     import 'memcachedsetup'
+    import 'pythonsetup.pp'
 
 
 
@@ -69,4 +70,5 @@ node default {
     include weighttp
     include security
     include memcachedsetup
+    include pythonsetup
 }

@@ -29,10 +29,8 @@ Installed components
 * golang
 * python + virtualenv + pip
 * sysctl configurations for lot of connections
-* rbenv
-* rails
-* node.js
-* npm
+* rbenv + rails
+* node.js + npm
 * percona mysql server
 * postgresql
 * redis

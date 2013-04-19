@@ -6,7 +6,14 @@ class pythonsetup {
     $home_dir = "/home/${username}"
 
     file { "${home_dir}/pip.requirements.txt":
-      content => "bpython pep8 autopep8 line_profiler pycallgraph SquareMap RunSnakeRun redis hiredis rediscluster ",
+      content => "Fabric>=1.6.0
+RunSnakeRun>=2.0.2b1
+autopep8>=0.8.7
+bpython>=0.12
+pep8>=1.4.5
+pycallgraph>=0.5.1
+redis>=2.7.2
+repoze.profile>=2.0b1",
     }
 
     class { 'python':

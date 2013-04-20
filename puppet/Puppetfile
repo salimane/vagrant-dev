@@ -42,4 +42,6 @@ mod 'memcached',
 mod 'python',
     :git => 'git://github.com/salimane/puppet-python.git'
 
+mod 'uwsgi',
+    :git => 'git://github.com/althalus/puppet-uwsgi.git'
 

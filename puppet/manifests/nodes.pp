@@ -18,6 +18,7 @@ node default {
     import 'security'
     import 'memcachedsetup'
     import 'pythonsetup.pp'
+    import 'uwsgisetup'
 
 
 
@@ -71,4 +72,5 @@ node default {
     include security
     include memcachedsetup
     include pythonsetup
+    include uwsgisetup
 }

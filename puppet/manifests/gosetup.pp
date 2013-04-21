@@ -1,4 +1,5 @@
-
+# == Class: gosetup
+#
 class gosetup {
 
     apt::ppa { 'ppa:gophers/go': }

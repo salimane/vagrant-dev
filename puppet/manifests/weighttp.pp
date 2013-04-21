@@ -12,7 +12,7 @@ class weighttp {
     exec {
         'clone_weighttp':
             cwd     =>"${home_dir}/htdocs",
-            group => $username,
+            group   => $username,
             user    => $username,
             command => "git clone git://git.lighttpd.net/weighttp ${home_dir}/htdocs/weighttp",
             require => [Package['git'], File["${home_dir}/htdocs"]],
@@ -22,6 +22,6 @@ class weighttp {
             cwd     =>"${home_dir}/htdocs/weighttp",
             command => "${home_dir}/htdocs/weighttp/waf configure && ${home_dir}/htdocs/weighttp/waf build && ${home_dir}/htdocs/weighttp/waf install",
             require => Exec['clone_weighttp'],
-            creates => "/usr/local/bin/weighttp";
+            creates => '/usr/local/bin/weighttp';
     }
 }

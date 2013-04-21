@@ -1,3 +1,5 @@
+# == Class: phpsetup
+#
 class phpsetup {
     include php::fpm
     php::fpm::pool {  'www':
@@ -27,46 +29,46 @@ class phpsetup {
 
     file_line {
         'php-ini-display-errors':
-            path   => '/etc/php5/conf.d/php.custom.ini',
-            line   => 'display_errors = On',
+            path    => '/etc/php5/conf.d/php.custom.ini',
+            line    => 'display_errors = On',
             require => File['/etc/php5/conf.d/php.custom.ini'],
-            notify => Class['php::fpm::service'];
+            notify  => Class['php::fpm::service'];
 
         'php-ini-memory-limit':
-            path   => '/etc/php5/conf.d/php.custom.ini',
-            line   => 'memory_limit = 256M',
+            path    => '/etc/php5/conf.d/php.custom.ini',
+            line    => 'memory_limit = 256M',
             require => File['/etc/php5/conf.d/php.custom.ini'],
-            notify => Class['php::fpm::service'];
+            notify  => Class['php::fpm::service'];
 
         'php-ini-datetime':
-            path   => '/etc/php5/conf.d/php.custom.ini',
-            line   => 'date.timezone = Asia/Shanghai',
+            path    => '/etc/php5/conf.d/php.custom.ini',
+            line    => 'date.timezone = Asia/Shanghai',
             require => File['/etc/php5/conf.d/php.custom.ini'],
-            notify => Class['php::fpm::service'];
+            notify  => Class['php::fpm::service'];
 
         'php-ini-disable-func':
-            path   => '/etc/php5/conf.d/php.custom.ini',
-            line   => 'disable_functions = ',
+            path    => '/etc/php5/conf.d/php.custom.ini',
+            line    => 'disable_functions = ',
             require => File['/etc/php5/conf.d/php.custom.ini'],
-            notify => Class['php::fpm::service'];
+            notify  => Class['php::fpm::service'];
 
         'php-ini-error-reporting':
-            path   => '/etc/php5/conf.d/php.custom.ini',
-            line   => 'error_reporting = E_ALL | E_STRICT',
+            path    => '/etc/php5/conf.d/php.custom.ini',
+            line    => 'error_reporting = E_ALL | E_STRICT',
             require => File['/etc/php5/conf.d/php.custom.ini'],
-            notify => Class['php::fpm::service'];
+            notify  => Class['php::fpm::service'];
 
-         'php-ini-startup-error':
-            path   => '/etc/php5/conf.d/php.custom.ini',
-            line   => 'display_startup_errors = On',
+        'php-ini-startup-error':
+            path    => '/etc/php5/conf.d/php.custom.ini',
+            line    => 'display_startup_errors = On',
             require => File['/etc/php5/conf.d/php.custom.ini'],
-            notify => Class['php::fpm::service'];
+            notify  => Class['php::fpm::service'];
 
         'php-ini-error_log':
-            path   => '/etc/php5/conf.d/php.custom.ini',
-            line   => 'error_log = /var/log/php_errors.log',
+            path    => '/etc/php5/conf.d/php.custom.ini',
+            line    => 'error_log = /var/log/php_errors.log',
             require => File['/etc/php5/conf.d/php.custom.ini'],
-            notify => Class['php::fpm::service'],
+            notify  => Class['php::fpm::service'],
 
 
     }
@@ -103,15 +105,13 @@ class phpsetup {
 
         'phpunit-install':
             command => 'pear install pear.phpunit.de/PHPUnit',
-            unless => '[ -f /usr/bin/phpunit ]',
+            unless  => '[ -f /usr/bin/phpunit ]',
             require => [Exec['pear-upgrade']],
     }
 
     nginx::resource::upstream { 'php_backend':
-       ensure  => present,
-       members => [
-         'unix:/tmp/php-fpm.sock',
-       ],
+        ensure  => present,
+        members => [ 'unix:/tmp/php-fpm.sock', ],
     }
 
     import 'xhprof.pp'

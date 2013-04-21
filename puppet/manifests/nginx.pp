@@ -8,9 +8,9 @@ exec {
 }
 
 apt::source { 'nginx':
-    location   => 'http://nginx.org/packages/ubuntu',
-    repos      => 'nginx',
-    require => Exec['nginxkey']
+    location => 'http://nginx.org/packages/ubuntu',
+    repos    => 'nginx',
+    require  => Exec['nginxkey']
 }
 
 

@@ -3,6 +3,6 @@
 class uwsgisetup {
 
     class { 'uwsgi':
-	python => 'present',
+        python => 'present',
     }
 }

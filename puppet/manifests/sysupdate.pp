@@ -10,8 +10,8 @@ class sysupdate{
     #Exec['aptupgrade'] -> Package <| |>
     # run apt-get update before anything else runs
     class {'basic::update_aptget': stage => first} ->
-    class {"basic::upgrade_aptget":} ->
-    class {"basic::packages":}
+    class {'basic::upgrade_aptget':} ->
+    class {'basic::packages':}
 }
 
 # just some packages
@@ -38,7 +38,7 @@ class basic::update_aptget{
     # }
     exec{'aptupdate':
         command => 'apt-get -y autoremove --purge; apt-get -y autoclean --purge; apt-get  -y -f install; apt-get update; touch /tmp/apt-get-updated',
-        timeout    => 0,
+        timeout => 0,
         #unless => "test -e /tmp/apt-get-updated"
     }
 }
@@ -47,8 +47,8 @@ class basic::update_aptget{
 # runs only once after booting (checks /tmp/apt-get-update existence)
 class basic::upgrade_aptget{
   exec { 'aptupgrade':
-        command => "apt-get -y upgrade",
-        timeout    => 0,
+        command => 'apt-get -y upgrade --fix-missing',
+        timeout => 0,
         require => Exec['aptupdate']
     }
 }

@@ -37,7 +37,7 @@ node default {
         'less':
             #ensure  => latest,
             provider => 'npm',
-            require => Class['nodejs'];
+            require  => Class['nodejs'];
     }
 
     # add user salimane

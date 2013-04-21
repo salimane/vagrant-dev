@@ -14,7 +14,7 @@
 #
 class xhprof {
     package { ['graphviz']:
-        ensure => present,
+        ensure  => present,
         require => Class['phpsetup']
     }
 
@@ -24,7 +24,7 @@ class xhprof {
     exec {
         'clone_xhprof':
             cwd     =>"${home_dir}/htdocs",
-            group => $username,
+            group   => $username,
             user    => $username,
             command => "git clone https://github.com/salimane/xhprof.git ${home_dir}/htdocs/xhprof && chmod -R 0777 /home/salimane/htdocs/xhprof",
             require => [Package['git'], File["${home_dir}/htdocs"]],
@@ -34,21 +34,21 @@ class xhprof {
             cwd     =>"${home_dir}/htdocs/xhprof/extension",
             command => "phpize && ./configure && make && make install && echo \"extension=xhprof.so\nxhprof.output_dir=/tmp/\" > /etc/php5/conf.d/xhprof.ini",
             require => Exec['clone_xhprof'],
-            creates => "/etc/php5/conf.d/xhprof.ini";
+            creates => '/etc/php5/conf.d/xhprof.ini';
     }
 
     file_line {
         'php-ini-prepend':
-            path   => '/etc/php5/conf.d/php.custom.ini',
-            line   => "auto_prepend_file = ${home_dir}/htdocs/xhprof/xhprof_html/header.php",
+            path    => '/etc/php5/conf.d/php.custom.ini',
+            line    => "auto_prepend_file = ${home_dir}/htdocs/xhprof/xhprof_html/header.php",
             require => [Exec['install_xhprof'], File['/etc/php5/conf.d/php.custom.ini']],
-            notify => Class['php::fpm::service'];
+            notify  => Class['php::fpm::service'];
 
         'php-ini-append':
-            path   => '/etc/php5/conf.d/php.custom.ini',
-            line   => "auto_append_file = ${home_dir}/htdocs/xhprof/xhprof_html/footer.php",
+            path    => '/etc/php5/conf.d/php.custom.ini',
+            line    => "auto_append_file = ${home_dir}/htdocs/xhprof/xhprof_html/footer.php",
             require => [Exec['install_xhprof'], File['/etc/php5/conf.d/php.custom.ini']],
-            notify => Class['php::fpm::service'];
+            notify  => Class['php::fpm::service'];
     }
 
     nginx::resource::location { 'xhprof.local-images':
@@ -79,18 +79,18 @@ class xhprof {
         require             => Exec['install_xhprof'],
     }
 
-    file { "/etc/hosts":
+    file { '/etc/hosts':
         ensure => present,
-        owner => "root",
-        group => "root",
-        mode => "0644",
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0644',
     }
 
-    host { "xhprof.local":
-        alias => [ "xhprof.local" ],
-        ensure => present,
-        ip => '127.0.0.1',
-        target => '/etc/hosts',
-        require => File["/etc/hosts"],
+    host { 'xhprof.local':
+        ensure  => present,
+        alias   => [ 'xhprof.local' ],
+        ip      => '127.0.0.1',
+        target  => '/etc/hosts',
+        require => File['/etc/hosts'],
   }
 }

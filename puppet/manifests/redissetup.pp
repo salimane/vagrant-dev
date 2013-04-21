@@ -1,4 +1,5 @@
-
+# == Class: redissetup
+#
 class redissetup {
 
     apt::ppa { 'ppa:chris-lea/redis-server': }

@@ -1,4 +1,5 @@
-
+# == Class: heroku
+#
 class heroku {
 
     apt::source { 'heroku':

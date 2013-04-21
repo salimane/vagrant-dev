@@ -24,6 +24,6 @@ repoze.profile>=2.0b1",
 
     python::requirements { "${home_dir}/pip.requirements.txt":
         virtualenv => 'system',
-        require => File["${home_dir}/pip.requirements.txt"]
+        require    => File["${home_dir}/pip.requirements.txt"]
     }
 }

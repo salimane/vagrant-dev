@@ -27,6 +27,7 @@ Installed components
 * zsh
 * nginx
 * golang
+* uwsgi + python plugin
 * python + virtualenv + pip
 * sysctl configurations for lot of connections
 * rbenv + rails

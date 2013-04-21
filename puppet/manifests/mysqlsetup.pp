@@ -1,3 +1,5 @@
+# == Class: mysqlsetup
+#
 class mysqlsetup {
 
     apt::source { 'percona':

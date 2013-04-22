@@ -116,5 +116,4 @@ class phpsetup {
 
     import 'xhprof.pp'
     include xhprof
-    #include phpqatools
 }

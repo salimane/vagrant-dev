@@ -14,7 +14,7 @@
 #
 class xhprof {
     package { ['graphviz']:
-        ensure  => present,
+        ensure  => latest,
         require => Class['phpsetup']
     }
 

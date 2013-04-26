@@ -43,5 +43,5 @@ mod 'python',
     :git => 'git://github.com/salimane/puppet-python.git'
 
 mod 'uwsgi',
-    :git => 'git://github.com/althalus/puppet-uwsgi.git'
+    :git => 'git://github.com/salimane/puppet-uwsgi.git'
 

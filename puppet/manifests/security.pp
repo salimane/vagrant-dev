@@ -1,11 +1,10 @@
 # == Class: security
 #
-class security {
+class security($username = 'vagrant') {
 
     package { ['fail2ban', 'htop', 'molly-guard', 'etckeeper', 'logwatch']:
         ensure => present,
     }
 
-    $username = 'salimane'
     $home_dir = "/home/${username}"
 }

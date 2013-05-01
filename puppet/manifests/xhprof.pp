@@ -12,13 +12,12 @@
 #
 # === Requirements
 #
-class xhprof {
+class xhprof ($username = 'vagrant') {
     package { ['graphviz']:
         ensure  => latest,
         require => Class['phpsetup']
     }
 
-    $username = 'salimane'
     $home_dir = "/home/${username}"
 
     exec {
@@ -26,7 +25,7 @@ class xhprof {
             cwd     =>"${home_dir}/htdocs",
             group   => $username,
             user    => $username,
-            command => "git clone https://github.com/salimane/xhprof.git ${home_dir}/htdocs/xhprof && chmod -R 0777 /home/salimane/htdocs/xhprof",
+            command => "git clone https://github.com/salimane/xhprof.git ${home_dir}/htdocs/xhprof && chmod -R 0777 ${home_dir}/htdocs/xhprof",
             require => [Package['git'], File["${home_dir}/htdocs"]],
             creates => "${home_dir}/htdocs/xhprof";
 

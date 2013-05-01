@@ -1,12 +1,11 @@
 # == Class: weighttp
 #
-class weighttp {
+class weighttp($username = 'vagrant') {
 
     package { ['libev-dev']:
         ensure => present,
     }
 
-    $username = 'salimane'
     $home_dir = "/home/${username}"
 
     exec {

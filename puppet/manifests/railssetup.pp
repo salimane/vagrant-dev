@@ -1,8 +1,7 @@
 # == Class: railssetup
 #
-class railssetup {
+class railssetup ($username = 'vagrant') {
 
-    $username    = 'salimane'
     $home_dir    = "/home/${username}"
     $rubyversion = '1.9.3-p392'
     #package {['libreadline5-dev']: ensure => 'installed'}

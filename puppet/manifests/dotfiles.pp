@@ -11,9 +11,8 @@
 #
 # Sample Usage:
 #  dotfilesSetup
-class  dotfiles {
+class  dotfiles($username = 'vagrant') {
 
-    $username = 'salimane'
     $home_dir = "/home/${username}"
 
     exec {
@@ -41,11 +40,23 @@ class  dotfiles {
             group  => $username,
             owner  => $username;
 
+        "${home_dir}/.zsh":
+            ensure => 'directory',
+            group  => $username,
+            owner  => $username;
+
         "${home_dir}/.zshrc":
             ensure  => link,
             group   => $username,
             owner   => $username,
             target  => "${home_dir}/htdocs/dotfiles/zsh/.zshrc",
+            require => [Exec['clone_dotfiles'], File["${home_dir}/.zsh/etc"]];
+
+        "${home_dir}/.zsh/etc":
+            ensure  => link,
+            group   => $username,
+            owner   => $username,
+            target  => "${home_dir}/htdocs/dotfiles/zsh/.zsh/etc",
             require => Exec['clone_dotfiles'];
 
         "${home_dir}/.wgetrc":

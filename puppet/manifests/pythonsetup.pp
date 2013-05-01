@@ -1,8 +1,7 @@
 # == Class: pythonsetup
 #
-class pythonsetup {
+class pythonsetup ($username = 'vagrant') {
 
-    $username = 'salimane'
     $home_dir = "/home/${username}"
 
     file { "${home_dir}/pip.requirements.txt":

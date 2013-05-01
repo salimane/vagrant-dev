@@ -1,6 +1,6 @@
 # == Class: phpsetup
 #
-class phpsetup {
+class phpsetup ($username = 'vagrant') {
     include php::fpm
     php::fpm::pool {  'www':
         listen      => '/tmp/php-fpm.sock',
@@ -75,28 +75,35 @@ class phpsetup {
 
     exec {
         'composer':
-            command => 'curl -s https://getcomposer.org/installer | php && mv composer.phar /home/salimane/bin/composer && chmod +x /home/salimane/bin/composer ',
-            unless  => '[ -f /home/salimane/bin/composer ]',
+            command => "curl -s https://getcomposer.org/installer | php && mv composer.phar /home/${username}/bin/composer && chmod +x /home/${username}/bin/composer ",
+            unless  => "[ -f /home/${username}/bin/composer ]",
             require => Class['php::fpm'],
-            cwd     => '/home/salimane',
-            user    => 'salimane',
-            group   => 'salimane',
+            cwd     => "/home/${username}",
+            user    => $username,
+            group   => $username,
             timeout => 0;
 
         'composer-update':
-            command => '/home/salimane/bin/composer self-update',
+            command => "/home/${username}/bin/composer self-update",
             require => Exec['composer'],
-            user    => 'salimane',
-            group   => 'salimane',
+            user    => $username,
+            group   => $username,
             timeout => 0;
 
         'phpcs-fixer':
-            command => 'wget http://cs.sensiolabs.org/get/php-cs-fixer.phar -O /home/salimane/bin/phpcs-fixer && chmod +x /home/salimane/bin/phpcs-fixer ',
-            unless  => '[ -f /home/salimane/bin/phpcs-fixer ]',
+            command => "wget http://cs.sensiolabs.org/get/php-cs-fixer.phar -O /home/${username}/bin/phpcs-fixer && chmod +x /home/${username}/bin/phpcs-fixer ",
+            unless  => "[ -f /home/${username}/bin/phpcs-fixer ]",
             require => Class['php::fpm'],
-            cwd     => '/home/salimane',
-            user    => 'salimane',
-            group   => 'salimane',
+            cwd     => "/home/${username}",
+            user    => $username,
+            group   => $username,
+            timeout => 0;
+
+        'phpcs-fixer-update':
+            command => "/home/${username}/bin/phpcs-fixer self-update",
+            require => Exec['phpcs-fixer'],
+            user    => $username,
+            group   => $username,
             timeout => 0;
 
         'pear-upgrade':

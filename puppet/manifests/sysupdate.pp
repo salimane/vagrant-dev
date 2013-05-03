@@ -20,6 +20,7 @@ class basic::packages{
     'zsh', 'git' , 'software-properties-common', 'language-pack-zh-hans-base', 'subversion', 'tmux', 'curl', 'pandoc', 'wget']
     package { $sysPackages:
         require => Exec['aptupgrade'],
+        ensure => installed
     }
 
 }

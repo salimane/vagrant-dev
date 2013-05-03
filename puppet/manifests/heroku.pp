@@ -13,7 +13,7 @@ class heroku {
 
     package {
         'heroku-toolbelt':
-            ensure  => latest,
+            ensure  => installed,
             require => Apt::Source['heroku'];
     }
 }

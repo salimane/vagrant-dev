@@ -33,7 +33,7 @@ class xhprof ($username = 'vagrant') {
             cwd     =>"${home_dir}/htdocs/xhprof/extension",
             command => "phpize && ./configure && make && make install && echo \"extension=xhprof.so\nxhprof.output_dir=/tmp/\" > /etc/php5/conf.d/xhprof.ini",
             require => Exec['clone_xhprof'],
-            creates => '/etc/php5/conf.d/xhprof.ini';
+            onlyif => '[ test ! -f /etc/php5/conf.d/xhprof.ini ] ';
     }
 
     file_line {
@@ -78,11 +78,17 @@ class xhprof ($username = 'vagrant') {
         require             => Exec['install_xhprof'],
     }
 
-    file { '/etc/hosts':
-        ensure => present,
-        owner  => 'root',
-        group  => 'root',
-        mode   => '0644',
+    file {
+        '/etc/hosts':
+            ensure => present,
+            owner  => 'root',
+            group  => 'root',
+            mode   => '0644';
+
+       '/etc/php5/conf.d/xhprof.ini':
+            content => "extension=xhprof.so
+xhprof.output_dir=/tmp/",
+            require             => Exec['install_xhprof'];
     }
 
     host { 'xhprof.local':

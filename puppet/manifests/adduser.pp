@@ -23,7 +23,7 @@
 #  sshkeytype                                   => 'ssh-rsa',
 #  sshkey                                       => ''
 # }
-define adduser ($uid, $shell, $groups, $sshkeytype, $sshkey) {
+define adduser ($uid = undef, $shell, $groups, $sshkeytype, $sshkey) {
 
     $username = $title
 

@@ -8,12 +8,15 @@ class phpsetup ($username = 'vagrant') {
     }
 
     php::module {
-        [ 'curl', 'gd', 'geoip','imagick','imap','intl','mcrypt','memcache','memcached','mysql','pgsql','pspell','snmp','sqlite','xdebug','xmlrpc','xsl',]:
+        [ 'curl', 'gd', 'geoip','imagick','imap','intl','mcrypt','memcache','memcached','pgsql','pspell','snmp','sqlite','xdebug','xmlrpc','xsl',]:
             notify => Class['php::fpm::service'];
 
         [ 'apc', ]:
             notify         => Class['php::fpm::service'],
-            package_prefix => 'php-',
+            package_prefix => 'php-';
+
+        [ 'mysql']:
+           require => Class['mysqlsetup'];
     }
 
     file { '/etc/php5/conf.d/php.custom.ini':
@@ -77,7 +80,7 @@ class phpsetup ($username = 'vagrant') {
         'composer':
             command => "curl -s https://getcomposer.org/installer | php && mv composer.phar /home/${username}/bin/composer && chmod +x /home/${username}/bin/composer ",
             unless  => "[ -f /home/${username}/bin/composer ]",
-            require => Class['php::fpm'],
+            require => [Class['php::fpm'], File["/home/${username}/bin"]],
             cwd     => "/home/${username}",
             user    => $username,
             group   => $username,
@@ -93,7 +96,7 @@ class phpsetup ($username = 'vagrant') {
         'phpcs-fixer':
             command => "wget http://cs.sensiolabs.org/get/php-cs-fixer.phar -O /home/${username}/bin/phpcs-fixer && chmod +x /home/${username}/bin/phpcs-fixer ",
             unless  => "[ -f /home/${username}/bin/phpcs-fixer ]",
-            require => Class['php::fpm'],
+            require => [Class['php::fpm'], File["/home/${username}/bin"]],
             cwd     => "/home/${username}",
             user    => $username,
             group   => $username,

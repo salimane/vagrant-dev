@@ -6,7 +6,7 @@ node default {
     import 'puppetsetup.pp'
     import 'sshsetup.pp'
     import 'dotfiles.pp'
-    import 'nginx.pp'
+    import 'nginxsetup.pp'
     import 'phpsetup.pp'
     import 'mysqlsetup.pp'
     import 'postgresql.pp'
@@ -24,7 +24,6 @@ node default {
 
     # add user vagrant
     adduser { 'vagrant':
-        uid        => 1000,
         shell      => '/bin/zsh',
         groups     => ['sudo'],
         sshkeytype => 'ssh-rsa',
@@ -35,6 +34,7 @@ node default {
     include puppetsetup
     include sshsetup
     include dotfiles
+    include nginxsetup
     include java7
     include mysqlsetup
     include phpsetup

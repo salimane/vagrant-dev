@@ -62,7 +62,7 @@ Vagrant.configure("2") do |config|
   # You will need to create the manifests directory and a manifest in
   # the file precise64.pp in the manifests_path directory.
   config.vm.provision :puppet do |puppet|
-    puppet.options = "--verbose --summarize --debug"
+    puppet.options = "--verbose --summarize"
     puppet.manifests_path = "puppet/manifests"
     puppet.module_path = "puppet/modules"
     puppet.manifest_file  = "init.pp"

@@ -3,7 +3,7 @@
 class weighttp($username = 'vagrant') {
 
     package { ['libev-dev']:
-        ensure => present,
+        ensure => installed,
     }
 
     $home_dir = "/home/${username}"

@@ -38,7 +38,7 @@ class basic::update_aptget{
     #     purge_preferences_d  => false
     # }
     exec{'aptupdate':
-        command => 'apt-get -y autoremove --purge; apt-get -y autoclean --purge; apt-get  -y -f install; apt-get update; touch /tmp/apt-get-updated',
+        command => 'apt-get -y autoremove; apt-get -y autoclean; apt-get  -y -f install; apt-get update; touch /tmp/apt-get-updated',
         timeout => 0,
         #unless => "test -e /tmp/apt-get-updated"
     }

@@ -29,6 +29,7 @@ Installed components
 * golang
 * uwsgi + python plugin
 * python + virtualenv + pip
+* sun jdk 7
 * sysctl configurations for lot of connections
 * rbenv + rails
 * node.js + npm

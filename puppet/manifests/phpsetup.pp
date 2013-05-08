@@ -71,8 +71,13 @@ class phpsetup ($username = 'vagrant') {
             path    => '/etc/php5/conf.d/php.custom.ini',
             line    => 'error_log = /var/log/php_errors.log',
             require => File['/etc/php5/conf.d/php.custom.ini'],
-            notify  => Class['php::fpm::service'],
+            notify  => Class['php::fpm::service'];
 
+        'php-ini-phar-readonly':
+            path    => '/etc/php5/conf.d/php.custom.ini',
+            line    => 'phar.readonly = Off',
+            require => File['/etc/php5/conf.d/php.custom.ini'],
+            notify  => Class['php::fpm::service'];
 
     }
 
@@ -89,6 +94,39 @@ class phpsetup ($username = 'vagrant') {
         'composer-update':
             command => "/home/${username}/bin/composer self-update",
             require => Exec['composer'],
+            user    => $username,
+            group   => $username,
+            timeout => 0;
+
+        'box':
+            command => "curl -s http://box-project.org/installer.php | php && mv box.phar /home/${username}/bin/box && chmod +x /home/${username}/bin/box ",
+            unless  => "[ -f /home/${username}/bin/box ]",
+            require => [Class['php::fpm'], File["/home/${username}/bin"]],
+            cwd     => "/home/${username}",
+            user    => $username,
+            group   => $username,
+            timeout => 0;
+
+        'box-update':
+            command => "/home/${username}/bin/box update",
+            require => Exec['box'],
+            user    => $username,
+            group   => $username,
+            timeout => 0;
+
+        'clone_boris':
+            cwd     =>"${home_dir}/htdocs",
+            group   => $username,
+            user    => $username,
+            command => "git clone git://github.com/d11wtq/boris.git ${home_dir}/htdocs/boris",
+            creates => "${home_dir}/htdocs/boris",
+            require => [Package['git'], USER[$username], File["${home_dir}/htdocs"]];
+
+        'boris':
+            command => "box build && mv boris.phar /home/${username}/bin/boris && chmod +x /home/${username}/bin/boris ",
+            unless  => "[ -f /home/${username}/bin/boris ]",
+            require => [Exec['box-update'], Exec['clone_boris']],
+            cwd     => "/home/${username}/htdocs/boris",
             user    => $username,
             group   => $username,
             timeout => 0;

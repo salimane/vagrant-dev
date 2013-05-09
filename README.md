@@ -37,7 +37,7 @@ Installed components
 * postgresql
 * redis
 * memcached
-* php-fpm env + xdebug + xhprof + phpunit
+* php-fpm env + xdebug + xhprof + phpunit + boris
 * heroku toolbelt
 * weighttp
 

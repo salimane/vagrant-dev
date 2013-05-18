@@ -25,8 +25,8 @@ class xhprof ($username = 'vagrant') {
             cwd     =>"${home_dir}/htdocs",
             group   => $username,
             user    => $username,
-            command => "git clone https://github.com/salimane/xhprof.git ${home_dir}/htdocs/xhprof && chmod -R 0777 ${home_dir}/htdocs/xhprof",
-            require => [Package['git'], File["${home_dir}/htdocs"]],
+            command => "mkdir -p ${home_dir}/htdocs && git clone https://github.com/salimane/xhprof.git ${home_dir}/htdocs/xhprof && chmod -R 0777 ${home_dir}/htdocs/xhprof",
+            require => [Package['git']],
             creates => "${home_dir}/htdocs/xhprof";
 
         'install_xhprof':

@@ -51,7 +51,7 @@ Vagrant.configure("2") do |config|
     # vb.gui = true
 
     # Use VBoxManage to customize the VM. For example to change memory:
-    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    vb.customize ["modifyvm", :id, "--memory", "512"]
     # allow symlinks in vm
     vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
 
@@ -62,7 +62,7 @@ Vagrant.configure("2") do |config|
   # You will need to create the manifests directory and a manifest in
   # the file precise64.pp in the manifests_path directory.
   config.vm.provision :puppet do |puppet|
-    puppet.options = "--verbose --summarize"
+    puppet.options = "--verbose --summarize --debug"
     puppet.manifests_path = "puppet/manifests"
     puppet.module_path = "puppet/modules"
     puppet.manifest_file  = "init.pp"

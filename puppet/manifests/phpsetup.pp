@@ -115,15 +115,15 @@ class phpsetup ($username = 'vagrant') {
             timeout => 0;
 
         'clone_boris':
-            cwd     =>"${home_dir}/htdocs",
+            cwd     =>"/home/${username}/htdocs",
             group   => $username,
             user    => $username,
-            command => "git clone git://github.com/d11wtq/boris.git ${home_dir}/htdocs/boris",
-            creates => "${home_dir}/htdocs/boris",
-            require => [Package['git'], USER[$username], File["${home_dir}/htdocs"]];
+            command => "git clone git://github.com/d11wtq/boris.git /home/${username}/htdocs/boris",
+            creates => "/home/${username}/htdocs/boris",
+            require => [Package['git'], USER[$username]];
 
         'boris':
-            command => "box build && mv boris.phar /home/${username}/bin/boris && chmod +x /home/${username}/bin/boris ",
+            command => "/home/${username}/bin/box build && mv boris.phar /home/${username}/bin/boris && chmod +x /home/${username}/bin/boris ",
             unless  => "[ -f /home/${username}/bin/boris ]",
             require => [Exec['box-update'], Exec['clone_boris']],
             cwd     => "/home/${username}/htdocs/boris",

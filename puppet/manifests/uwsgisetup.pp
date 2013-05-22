@@ -2,7 +2,10 @@
 #
 class uwsgisetup {
 
-    class { 'uwsgi':
-        python => 'present',
+    include uwsgi
+
+    uwsgi::plugin {
+         'python':
+            ensure => present;
     }
 }

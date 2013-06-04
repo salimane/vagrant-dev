@@ -16,7 +16,7 @@ mod 'ntp',
     :git => "git://github.com/puppetlabs/puppetlabs-ntp.git"
 
 mod 'nodejs',
-    :git => "git://github.com/puppetlabs/puppetlabs-nodejs.git"
+    :git => "git://github.com/siwilkins/puppetlabs-nodejs.git"
 
 mod 'php',
     :git => "git://github.com/saz/puppet-php.git"

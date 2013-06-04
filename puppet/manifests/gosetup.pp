@@ -2,7 +2,14 @@
 #
 class gosetup {
 
-    apt::ppa { 'ppa:gophers/go': }
+    package { 'system-golang':
+        ensure => 'absent',
+        name   => ['golang', 'golang-go'],
+    }
+
+    apt::ppa { 'ppa:gophers/go':
+        require => Package['system-golang'],
+    }
 
     package {
         'golang-stable':

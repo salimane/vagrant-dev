@@ -2,6 +2,18 @@
 #
 class mysqlsetup {
 
+    #remove all system mysql before this
+
+    package { 'system-mysql':
+        ensure => 'absent',
+        name   => ['mysql-server', 'mysql-server-5.5', 'mysql-client', 'mysql-client-5.5', 'mysql-client-core-5.5', 'mysql-server-core-5.5', 'mysql-common' ],
+    }
+
+    apt::pin { '00percona':
+        priority => 1001,
+        require => Package['system-mysql'],
+    }
+
     apt::source { 'percona':
         location    => 'http://repo.percona.com/apt',
         release     => $lsbdistcodename,
@@ -9,20 +21,12 @@ class mysqlsetup {
         include_src => true,
         key         => 'CD2EFD2A',
         key_server  => 'keys.gnupg.net',
+        require => Apt::Pin['00percona']
     }
 
-    apt::pin { 'Percona Development Team': priority => 1001 }
 
     package {
-        'percona-server-server-5.5':
-            ensure  => installed,
-            require => [ Apt::Source['percona']];
-
-        'percona-server-client-5.5':
-            ensure  => installed,
-            require => [ Apt::Source['percona']];
-
-      'libmysqlclient-dev':
+        ['percona-server-server-5.5', 'percona-server-client-5.5', 'libmysqlclient-dev'] :
             ensure  => installed,
             require => [ Apt::Source['percona']];
     }

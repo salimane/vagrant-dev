@@ -1,9 +1,8 @@
 class { 'nodejs':
-  dev_package => true
+  dev_package => false
 }
 
 package {
-
     'less':
         #ensure  => latest,
         provider => 'npm',

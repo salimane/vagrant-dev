@@ -163,5 +163,7 @@ class phpsetup ($username = 'vagrant') {
     }
 
     import 'xhprof.pp'
-    include xhprof
+    class { 'xhprof':
+        username => $username
+    }
 }

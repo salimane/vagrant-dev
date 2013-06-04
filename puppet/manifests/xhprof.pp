@@ -33,7 +33,8 @@ class xhprof ($username = 'vagrant') {
             cwd     =>"${home_dir}/htdocs/xhprof/extension",
             command => "phpize && ./configure && make && make install && echo \"extension=xhprof.so\nxhprof.output_dir=/tmp/\" > /etc/php5/conf.d/xhprof.ini",
             require => Exec['clone_xhprof'],
-            onlyif => '[ test ! -f /etc/php5/conf.d/xhprof.ini ] ';
+            onlyif => '[ test ! -f /etc/php5/conf.d/xhprof.ini ] ',
+            notify  => Class['php::fpm::service'];
     }
 
     file_line {

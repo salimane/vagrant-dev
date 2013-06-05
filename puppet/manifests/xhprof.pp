@@ -15,13 +15,14 @@
 class xhprof ($username = 'vagrant') {
     package { ['graphviz']:
         ensure  => latest,
-        require => Class['phpsetup']
+        require => Class['php::fpm']
     }
 
     $home_dir = "/home/${username}"
 
     exec {
         'clone_xhprof':
+            provider => shell,
             cwd     =>"${home_dir}/htdocs",
             group   => $username,
             user    => $username,
@@ -30,10 +31,11 @@ class xhprof ($username = 'vagrant') {
             creates => "${home_dir}/htdocs/xhprof";
 
         'install_xhprof':
+            provider => shell,
             cwd     =>"${home_dir}/htdocs/xhprof/extension",
-            command => "phpize && ./configure && make && make install && echo \"extension=xhprof.so\nxhprof.output_dir=/tmp/\" > /etc/php5/conf.d/xhprof.ini",
-            require => Exec['clone_xhprof'],
-            onlyif => '[ test ! -f /etc/php5/conf.d/xhprof.ini ] ',
+            command => 'phpize; ./configure; make; make install && echo "extension=xhprof.so\nxhprof.output_dir=/tmp/" > /etc/php5/conf.d/xhprof.ini',
+            require => [Exec['clone_xhprof'], Class['php::fpm']],
+            unless => '[ -f /etc/php5/conf.d/xhprof.ini ] ',
             notify  => Class['php::fpm::service'];
     }
 

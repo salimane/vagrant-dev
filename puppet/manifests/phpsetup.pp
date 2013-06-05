@@ -16,7 +16,36 @@ class phpsetup ($username = 'vagrant') {
             package_prefix => 'php-';
 
         [ 'mysql']:
-           require => Class['mysqlsetup'];
+            notify  => Class['php::fpm::service'],
+            require => Class['mysqlsetup'];
+    }
+
+    if $::lsbdistcodename == 'Precise' {
+        php::module {
+            [ 'suhosin']:
+                notify  => Class['php::fpm::service']
+        }
+    }
+
+    if $::operatingsystem == 'Ubuntu' and $::lsbdistcodename != 'Precise' {
+        $box_require = [Class['php::fpm'], File["/home/${username}/bin"]]
+
+        php::module {
+            [ 'mysqlnd']:
+                notify  => Class['php::fpm::service'],
+                require => Class['mysqlsetup'];
+        }
+
+        exec {
+            'php5enmod-ext':
+                command => "php5enmod curl gd geoip imap intl mcrypt memcache memcached mysql mysqlnd/10 mysqli pdo pdo_mysql pdo_pgsql pdo_sqlite pgsql pspell snmp xdebug xmlrpc xsl",
+                require => [Class['php::fpm'], Php::Module["xsl"]],
+                notify => Class['php::fpm::service'];
+        }
+    }
+
+    if $::lsbdistcodename == 'Precise' {
+        $box_require = [Class['php::fpm'], File["/home/${username}/bin"], Php::Module['suhosin'], File_line['php-ini-suhosin-include-phar']]
     }
 
     file { '/etc/php5/conf.d/php.custom.ini':
@@ -79,6 +108,12 @@ class phpsetup ($username = 'vagrant') {
             require => File['/etc/php5/conf.d/php.custom.ini'],
             notify  => Class['php::fpm::service'];
 
+        'php-ini-suhosin-include-phar':
+            path    => '/etc/php5/conf.d/php.custom.ini',
+            line    => 'suhosin.executor.include.whitelist = phar',
+            require => File['/etc/php5/conf.d/php.custom.ini'],
+            notify  => Class['php::fpm::service'];
+
     }
 
     exec {
@@ -101,7 +136,7 @@ class phpsetup ($username = 'vagrant') {
         'box':
             command => "curl -s http://box-project.org/installer.php | php && mv box.phar /home/${username}/bin/box && chmod +x /home/${username}/bin/box ",
             unless  => "[ -f /home/${username}/bin/box ]",
-            require => [Class['php::fpm'], File["/home/${username}/bin"]],
+            require => $box_require,
             cwd     => "/home/${username}",
             user    => $username,
             group   => $username,

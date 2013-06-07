@@ -160,7 +160,7 @@ class phpsetup ($username = 'vagrant') {
         'boris':
             command => "/home/${username}/bin/box build && mv boris.phar /home/${username}/bin/boris && chmod +x /home/${username}/bin/boris ",
             unless  => "[ -f /home/${username}/bin/boris ]",
-            require => [Exec['box-update'], Exec['clone_boris']],
+            require => [Exec['box-update'], Exec['clone_boris'], File_line['php-ini-suhosin-include-phar', 'php-ini-phar-readonly']],
             cwd     => "/home/${username}/htdocs/boris",
             user    => $username,
             group   => $username,
@@ -192,6 +192,7 @@ class phpsetup ($username = 'vagrant') {
             require => [Exec['pear-upgrade']],
     }
 
+    include nginx
     nginx::resource::upstream { 'php_backend':
         ensure  => present,
         members => [ 'unix:/tmp/php-fpm.sock', ],

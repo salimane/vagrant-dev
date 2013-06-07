@@ -7,6 +7,8 @@ class gosetup {
         name   => ['golang', 'golang-go'],
     }
 
+    include apt
+
     apt::ppa { 'ppa:gophers/go':
         require => Package['system-golang'],
     }

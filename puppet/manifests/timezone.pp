@@ -10,7 +10,7 @@ class timezone {
     package { 'tzdata': }
 
     file { '/etc/localtime':
-        source  => 'file:///usr/share/zoneinfo/Asia/Shanghai',
+        source  => 'file:///usr/share/zoneinfo/Europe/Berlin',
         require => Package['tzdata']
     }
 

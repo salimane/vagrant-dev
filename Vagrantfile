@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
   # your network.
   # config.vm.network :public_network
 
-  # config.vm.synced_folder "../data", "/vagrant_data"
+  config.vm.synced_folder "../../src", "/home/vagrant/src"
 
   config.vm.provider :virtualbox do |vb|
     # Don't boot with headless mode

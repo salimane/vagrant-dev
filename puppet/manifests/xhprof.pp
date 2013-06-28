@@ -23,16 +23,16 @@ class xhprof ($username = 'vagrant') {
     exec {
         'clone_xhprof':
             provider => shell,
-            cwd     =>"${home_dir}/htdocs",
+            cwd     =>"${home_dir}/src",
             group   => $username,
             user    => $username,
-            command => "mkdir -p ${home_dir}/htdocs && git clone https://github.com/salimane/xhprof.git ${home_dir}/htdocs/xhprof && chmod -R 0777 ${home_dir}/htdocs/xhprof",
+            command => "mkdir -p ${home_dir}/src && git clone https://github.com/salimane/xhprof.git ${home_dir}/src/xhprof && chmod -R 0777 ${home_dir}/src/xhprof",
             require => [Package['git']],
-            creates => "${home_dir}/htdocs/xhprof";
+            creates => "${home_dir}/src/xhprof";
 
         'install_xhprof':
             provider => shell,
-            cwd     =>"${home_dir}/htdocs/xhprof/extension",
+            cwd     =>"${home_dir}/src/xhprof/extension",
             command => 'phpize; ./configure; make; make install && echo "extension=xhprof.so\nxhprof.output_dir=/tmp/" > /etc/php5/conf.d/xhprof.ini',
             require => [Exec['clone_xhprof'], Class['php::fpm']],
             unless => '[ -f /etc/php5/conf.d/xhprof.ini ] ',
@@ -42,13 +42,13 @@ class xhprof ($username = 'vagrant') {
     file_line {
         'php-ini-prepend':
             path    => '/etc/php5/conf.d/php.custom.ini',
-            line    => "auto_prepend_file = ${home_dir}/htdocs/xhprof/xhprof_html/header.php",
+            line    => "auto_prepend_file = ${home_dir}/src/xhprof/xhprof_html/header.php",
             require => [Exec['install_xhprof'], File['/etc/php5/conf.d/php.custom.ini']],
             notify  => Class['php::fpm::service'];
 
         'php-ini-append':
             path    => '/etc/php5/conf.d/php.custom.ini',
-            line    => "auto_append_file = ${home_dir}/htdocs/xhprof/xhprof_html/footer.php",
+            line    => "auto_append_file = ${home_dir}/src/xhprof/xhprof_html/footer.php",
             require => [Exec['install_xhprof'], File['/etc/php5/conf.d/php.custom.ini']],
             notify  => Class['php::fpm::service'];
     }
@@ -56,7 +56,7 @@ class xhprof ($username = 'vagrant') {
     nginx::resource::location { 'xhprof.local-images':
         ensure              => present,
         location            => '~* ^.+\.(jpg|jpeg|gif|css|png|js|ico)$',
-        www_root            => "${home_dir}/htdocs/xhprof/xhprof_html",
+        www_root            => "${home_dir}/src/xhprof/xhprof_html",
         vhost               => 'xhprof.local',
         location_cfg_append =>{'access_log' => 'off', 'expires' => '1m'}
     }
@@ -64,7 +64,7 @@ class xhprof ($username = 'vagrant') {
     nginx::resource::location { 'xhprof.local-php':
         ensure              => present,
         location            => '~ ^(.+\.php)(.*)$',
-        www_root            => "${home_dir}/htdocs/xhprof/xhprof_html",
+        www_root            => "${home_dir}/src/xhprof/xhprof_html",
         vhost               => 'xhprof.local',
         index_files         => ['index.php'],
         location_cfg_append =>{'fastcgi_pass' => 'php_backend', 'fastcgi_index' => 'index.php', 'include' => 'fastcgi_params'}
@@ -73,7 +73,7 @@ class xhprof ($username = 'vagrant') {
     nginx::resource::vhost { 'xhprof.local':
         ensure              => present,
         listen_port         => '80',
-        www_root            => "${home_dir}/htdocs/xhprof/xhprof_html",
+        www_root            => "${home_dir}/src/xhprof/xhprof_html",
         index_files         => ['index.php'],
         server_name         => ['xhprof.local'],
         location_cfg_prepend =>{'if (!-e $request_filename) { rewrite ^(^\/*)/(.*)$ $1/index.php last; }' => ' index index.php'},

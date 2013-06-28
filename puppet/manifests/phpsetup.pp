@@ -150,18 +150,18 @@ class phpsetup ($username = 'vagrant') {
             timeout => 0;
 
         'clone_boris':
-            cwd     =>"/home/${username}/htdocs",
+            cwd     =>"/home/${username}/src",
             group   => $username,
             user    => $username,
-            command => "git clone git://github.com/d11wtq/boris.git /home/${username}/htdocs/boris",
-            creates => "/home/${username}/htdocs/boris",
+            command => "git clone git://github.com/d11wtq/boris.git /home/${username}/src/boris",
+            creates => "/home/${username}/src/boris",
             require => [Package['git'], USER[$username]];
 
         'boris':
             command => "/home/${username}/bin/box build && mv boris.phar /home/${username}/bin/boris && chmod +x /home/${username}/bin/boris ",
             unless  => "[ -f /home/${username}/bin/boris ]",
             require => [Exec['box-update'], Exec['clone_boris'], File_line['php-ini-suhosin-include-phar', 'php-ini-phar-readonly']],
-            cwd     => "/home/${username}/htdocs/boris",
+            cwd     => "/home/${username}/src/boris",
             user    => $username,
             group   => $username,
             timeout => 0;

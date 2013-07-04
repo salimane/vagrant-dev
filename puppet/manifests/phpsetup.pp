@@ -114,6 +114,12 @@ class phpsetup ($username = 'vagrant') {
             require => File['/etc/php5/conf.d/php.custom.ini'],
             notify  => Class['php::fpm::service'];
 
+        'php-ini-cgi-fix-pathinfo':
+            path    => '/etc/php5/conf.d/php.custom.ini',
+            line    => 'cgi.fix_pathinfo = 0',
+            require => File['/etc/php5/conf.d/php.custom.ini'],
+            notify  => Class['php::fpm::service'];
+
     }
 
     exec {

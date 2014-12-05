@@ -41,6 +41,7 @@ GEM
       facter (> 1.6, < 3)
       hiera (~> 1.0)
       json_pure
+    puppet-lint (1.1.0)
     puppet_forge (1.0.3)
       her (~> 0.6)
     rsync (1.0.9)
@@ -55,3 +56,4 @@ PLATFORMS
 DEPENDENCIES
   librarian-puppet (~> 2.0.0)
   puppet (~> 3.7.3)
+  puppet-lint (~> 1.1.0)

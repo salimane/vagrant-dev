@@ -3,6 +3,7 @@ FORGE
   specs:
     maestrodev-rvm (1.7.1)
       puppetlabs-stdlib (>= 3.2.0)
+    maestrodev-wget (1.5.6)
     puppetlabs-apt (1.7.0)
       puppetlabs-stdlib (>= 2.2.1)
     puppetlabs-concat (1.1.2)
@@ -17,12 +18,43 @@ GIT
       puppetlabs-stdlib (>= 3.2.0)
 
 GIT
+  remote: https://github.com/Sliim/puppet-pyenv.git
+  ref: master
+  sha: 40a7eb9dee56bf96b35fe24c37376e76205c9089
+  specs:
+    Sliim-pyenv (0.1.0)
+      puppetlabs-stdlib (>= 0)
+
+GIT
   remote: https://github.com/camptocamp/puppet-augeas
   ref: master
   sha: e770b9b1fee17661a26fd8ce995b4829aabd7073
   specs:
     camptocamp-augeas (1.0.3)
       puppetlabs-stdlib (>= 3.2.0)
+
+GIT
+  remote: https://github.com/dcoxall/dcoxall-golang.git
+  ref: master
+  sha: 4f8eb7bed439922702683b55dc1351069a2c0d1e
+  specs:
+    dcoxall-golang (1.1.1)
+
+GIT
+  remote: https://github.com/echocat/puppet-redis.git
+  ref: master
+  sha: 64efa61eae7754d1b5a19e722591a026c65c4c1c
+  specs:
+    echocat-redis (1.2.2)
+      puppetlabs-stdlib (>= 4.2.0)
+
+GIT
+  remote: https://github.com/garethr/garethr-heroku.git
+  ref: master
+  sha: c312a282cfb5e4cfccd719c61298a5a2d05a8939
+  specs:
+    garethr-heroku (0.0.1)
+      maestrodev-wget (>= 0)
 
 GIT
   remote: https://github.com/jfryman/puppet-nginx.git
@@ -131,14 +163,6 @@ GIT
     stahnma-epel (1.0.0)
 
 GIT
-  remote: https://github.com/stankevich/puppet-python.git
-  ref: master
-  sha: b9fb175b259599e89b14895b6ebb6108769e0ead
-  specs:
-    stankevich-python (1.7.16)
-      puppetlabs-stdlib (>= 4.0.0)
-
-GIT
   remote: https://github.com/thias/puppet-php.git
   ref: master
   sha: 9ea9906427c263904049ce8afd66c5186386cb9f
@@ -154,7 +178,11 @@ GIT
 
 DEPENDENCIES
   Engage-uwsgi (>= 0)
+  Sliim-pyenv (>= 0)
   camptocamp-augeas (>= 0)
+  dcoxall-golang (>= 0)
+  echocat-redis (>= 0)
+  garethr-heroku (>= 0)
   jfryman-nginx (>= 0)
   maestrodev-rvm (= 1.7.1)
   puppetlabs-firewall (>= 0)
@@ -170,7 +198,6 @@ DEPENDENCIES
   saz-memcached (>= 0)
   saz-sudo (>= 0)
   stahnma-epel (>= 0)
-  stankevich-python (>= 0)
   thias-php (>= 0)
   thias-sysctl (>= 0)
 

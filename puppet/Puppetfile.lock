@@ -1,6 +1,7 @@
 FORGE
   remote: https://forgeapi.puppetlabs.com
   specs:
+    3fs-phantomjs (0.0.5)
     maestrodev-rvm (1.7.1)
       puppetlabs-stdlib (>= 3.2.0)
     maestrodev-wget (1.5.6)
@@ -177,6 +178,7 @@ GIT
     thias-sysctl (1.0.0)
 
 DEPENDENCIES
+  3fs-phantomjs (= 0.0.5)
   Engage-uwsgi (>= 0)
   Sliim-pyenv (>= 0)
   camptocamp-augeas (>= 0)

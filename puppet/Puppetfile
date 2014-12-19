@@ -67,3 +67,5 @@ mod 'puppetlabs/java',
 
 mod 'thias/php',
     :git => "https://github.com/thias/puppet-php.git"
+
+mod '3fs/phantomjs', '0.0.5'

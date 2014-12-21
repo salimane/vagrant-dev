@@ -25,6 +25,7 @@ rpm -qa augeas-devel | grep 'augeas-devel-1.0.0' || yum -y install augeas-devel-
 rpm -qa augeas | grep 'augeas-1.0.0' || yum -y install augeas-1.0.0
 gem list | grep 'puppet.*3.7.3' || gem install puppet -v3.7.3
 gem list | grep 'ruby-augeas.*0.5.0' || gem install ruby-augeas -v0.5.0
+yum update -y
 SCRIPT
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -34,9 +35,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.hostname = SETTINGS[:hostname]
 
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
   config.vm.network :private_network, ip: SETTINGS[:ip]
-  # config.vm.network "public_network"
 
   config.hostmanager.enabled = true
   config.hostmanager.manage_host = true
@@ -48,7 +47,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     node.vm.network :private_network, ip: SETTINGS[:ip]
   end
 
-  # config.ssh.username = 'vagrant'
   config.ssh.forward_agent = true
 
   config.vm.synced_folder '../', '/home/vagrant/src', type: 'nfs'
@@ -71,7 +69,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.vmx['memsize'] = SETTINGS[:memsize]
   end
 
-  # Update puppet to version 3.2.2 before using puppet provisioning.
   config.vm.provision :shell, inline: $puppet_update_script
 
   config.vm.provision :puppet do |puppet|

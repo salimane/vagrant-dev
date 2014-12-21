@@ -2,7 +2,7 @@
 classes:
   - dev
 
-kermit::web::rvm_version: '1.25.31'
+kermit::web::rvm_version: '1.26.4'
 kermit::web::ruby_version: 'ruby-2.1.5'
 kermit::web::bundler_version: '1.7.9'
 database:

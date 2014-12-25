@@ -75,6 +75,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # puppet.options = '--verbose --debug'
     puppet.manifests_path = 'puppet/manifests'
     puppet.module_path = 'puppet/modules'
+    puppet.synced_folder_type = "nfs"
     puppet.manifest_file  = 'site.pp'
     puppet.hiera_config_path = 'puppet/hiera.yaml'
   end
